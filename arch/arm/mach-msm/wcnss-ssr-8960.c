@@ -101,12 +101,14 @@ static void smsm_state_cb_hdlr(void *data, uint32_t old_state,
 		*backupcrashflag = 0;
 #endif	
 		set_warmboot();
+#ifdef CONFIG_CCI_KLOG
 #ifdef CCI_KLOG_ALLOW_FORCE_PANIC			
 		__raw_writel(CONFIG_WARMBOOT_CRASH, restart_reason);
 #else
 		__raw_writel(CONFIG_WARMBOOT_NORMAL, restart_reason);
 		*backupcrashflag = CONFIG_WARMBOOT_CRASH;
 #endif	
+#endif
 		mb();
 		panic(MODULE_NAME ": SMSM reset request received from Riva");
 	}
@@ -155,12 +157,14 @@ static irqreturn_t riva_wdog_bite_irq_hdlr(int irq, void *dev_id)
 		*backupcrashflag = 0;
 #endif		
 		set_warmboot();
+#ifdef CONFIG_CCI_KLOG
 #ifdef CCI_KLOG_ALLOW_FORCE_PANIC			
 		__raw_writel(CONFIG_WARMBOOT_CRASH, restart_reason);
 #else
 		__raw_writel(CONFIG_WARMBOOT_NORMAL, restart_reason);
 		*backupcrashflag = CONFIG_WARMBOOT_CRASH;
-#endif		
+#endif	
+#endif	
 		mb();
 		panic(MODULE_NAME ": Watchdog bite received from Riva");
 	}

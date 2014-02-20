@@ -569,12 +569,14 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		*backupcrashflag = 0;
 #endif	
 		set_warmboot();
+#ifdef CONFIG_CCI_KLOG
 #ifdef CCI_KLOG_ALLOW_FORCE_PANIC			
 		__raw_writel(CONFIG_WARMBOOT_CRASH, restart_reason);
 #else
 		__raw_writel(CONFIG_WARMBOOT_NORMAL, restart_reason);
 		*backupcrashflag = CONFIG_WARMBOOT_CRASH;
 #endif	
+#endif
 		mb();
 		panic("subsys-restart: Resetting the SoC - %s crashed.", name);
 		break;
@@ -587,12 +589,14 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		*backupcrashflag = 0;
 #endif	
 		set_warmboot();
+#ifdef CONFIG_CCI_KLOG
 #ifdef CCI_KLOG_ALLOW_FORCE_PANIC			
 		__raw_writel(CONFIG_WARMBOOT_CRASH, restart_reason);
 #else
 		__raw_writel(CONFIG_WARMBOOT_NORMAL, restart_reason);
 		*backupcrashflag = CONFIG_WARMBOOT_CRASH;
 #endif	
+#endif
 		mb();
 		panic("subsys-restart: Unknown restart level!\n");
 		break;
