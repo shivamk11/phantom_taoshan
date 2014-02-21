@@ -425,7 +425,7 @@ void msm_restart(char mode, const char *cmd)
 			cklc_save_magic(KLOG_MAGIC_RECOVERY, KLOG_STATE_NONE);
 #endif // #ifdef CONFIG_CCI_KLOG
 
-#if 0
+#if 1
 			__raw_writel(0x77665502, restart_reason);
 #else
 			__raw_writel(CONFIG_WARMBOOT_NORMAL, restart_reason);
