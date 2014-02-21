@@ -565,6 +565,7 @@ CONFIG_CRC_CCITT=y
 #
 CONFIG_LOCALVERSION="Phantom-v5"
 # CONFIG_LOCALVERSION_AUTO is not set
+# CONFIG_ARM_UNWIND is not set
 
 #
 # RCU Subsystem
