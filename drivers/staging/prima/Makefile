@@ -1,7 +1,7 @@
 MODNAME := wlan
 
 #Do we panic on bug?  default is to warn
-PANIC_ON_BUG := 0
+PANIC_ON_BUG := 1
 
 ifeq ($(CONFIG_CFG80211),y)
 HAVE_CFG80211 := 1
