@@ -13,6 +13,7 @@
  * GNU General Public License for more details.
  *
  */
+#include <linux/earlysuspend.h>
 #include <linux/workqueue.h>
 #include <linux/cpu.h>
 #include <linux/sched.h>
@@ -22,10 +23,6 @@
 #include <linux/slab.h>
 #include <linux/input.h>
 
-#if CONFIG_POWERSUSPEND
-#include <linux/powersuspend.h>
-#endif
-
 //#define DEBUG_INTELLI_PLUG
 #undef DEBUG_INTELLI_PLUG
 
@@ -33,13 +30,13 @@
 #define INTELLI_PLUG_MINOR_VERSION	0
 
 #define DEF_SAMPLING_MS			(500)
-#define BUSY_SAMPLING_MS		(1000)
+#define BUSY_SAMPLING_MS		(250)
 
-#define DUAL_CORE_PERSISTENCE		7
-#define TRI_CORE_PERSISTENCE		4
-#define QUAD_CORE_PERSISTENCE		4
+#define DUAL_CORE_PERSISTENCE		14
+#define TRI_CORE_PERSISTENCE		10
+#define QUAD_CORE_PERSISTENCE		6
 
-#define BUSY_PERSISTENCE		5
+#define BUSY_PERSISTENCE		20
 
 #define RUN_QUEUE_THRESHOLD		38
 
@@ -52,7 +49,7 @@ struct delayed_work intelli_plug_work;
 static unsigned int intelli_plug_active = 0;
 module_param(intelli_plug_active, uint, 0644);
 
-static unsigned int eco_mode_active = 0;
+static unsigned int eco_mode_active = 1;
 module_param(eco_mode_active, uint, 0644);
 
 static unsigned int sampling_time = 0;
@@ -289,8 +286,8 @@ static void __cpuinit intelli_plug_work_fn(struct work_struct *work)
 		msecs_to_jiffies(sampling_time));
 }
 
-#ifdef CONFIG_POWERSUSPEND
-static void intelli_plug_suspend(struct power_suspend *handler)
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static void intelli_plug_early_suspend(struct early_suspend *handler)
 {
 	int i;
 	int num_of_active_cores = 4;
@@ -307,7 +304,7 @@ static void intelli_plug_suspend(struct power_suspend *handler)
 	}
 }
 
-static void __cpuinit intelli_plug_resume(struct power_suspend *handler)
+static void __cpuinit intelli_plug_late_resume(struct early_suspend *handler)
 {
 	int num_of_active_cores;
 	int i;
@@ -332,11 +329,12 @@ static void __cpuinit intelli_plug_resume(struct power_suspend *handler)
 		msecs_to_jiffies(10));
 }
 
-static struct power_suspend intelli_plug_power_suspend_driver = {
-	.suspend = intelli_plug_suspend,
-	.resume = intelli_plug_resume,
+static struct early_suspend intelli_plug_early_suspend_struct_driver = {
+	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 10,
+	.suspend = intelli_plug_early_suspend,
+	.resume = intelli_plug_late_resume,
 };
-#endif  /* CONFIG_POWERSUSPEND */
+#endif	/* CONFIG_HAS_EARLYSUSPEND */
 
 static void intelli_plug_input_event(struct input_handle *handle,
 		unsigned int type, unsigned int code, int value)
@@ -350,13 +348,14 @@ static void intelli_plug_input_event(struct input_handle *handle,
 	sampling_time = BUSY_SAMPLING_MS;
 	busy_persist_count = BUSY_PERSISTENCE;
 
-        schedule_delayed_work_on(0, &intelli_plug_work,
-                msecs_to_jiffies(sampling_time));
+	schedule_delayed_work_on(0, &intelli_plug_work,
+		msecs_to_jiffies(sampling_time));
 }
 
 static int input_dev_filter(const char *input_dev_name)
 {
 	if (strstr(input_dev_name, "touchscreen") ||
+		strstr(input_dev_name, "synaptics_dsx_i2c") ||
 		strstr(input_dev_name, "sec_touchscreen") ||
 		strstr(input_dev_name, "touch_dev") ||
 		strstr(input_dev_name, "-keypad") ||
@@ -435,14 +434,13 @@ int __init intelli_plug_init(void)
 	sampling_time = DEF_SAMPLING_MS;
 
 	rc = input_register_handler(&intelli_plug_input_handler);
-#ifdef CONFIG_POWERSUSPEND
-	register_power_suspend(&intelli_plug_power_suspend_driver);
-#endif
-
 	INIT_DELAYED_WORK(&intelli_plug_work, intelli_plug_work_fn);
 	schedule_delayed_work_on(0, &intelli_plug_work,
 		msecs_to_jiffies(sampling_time));
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	register_early_suspend(&intelli_plug_early_suspend_struct_driver);
+#endif
 	return 0;
 }
 
