@@ -1638,6 +1638,12 @@ config INTELLI_PLUG
    help
      Generic Intelli-plug cpu hotplug driver for ARM SOCs
 
+config CPU_OVERCLOCK
+        bool "Enable Overclock frequencies"
+        default n
+        help
+          Overclock configuration for enabling more frequencies
+
 config MSM_AVS_HW
 	bool "Enable Adaptive Voltage Scaling (AVS)"
 	default n
