@@ -3483,11 +3483,6 @@ CONFIG_ANDROID_LOW_MEMORY_KILLER_AUTODETECT_OOM_ADJ_VALUES=y
 # CONFIG_USB_WPAN_HCD is not set
 
 #
-# Qualcomm Atheros Prima WLAN module
-#
-# CONFIG_PRIMA_WLAN is not set
-
-#
 # Qualcomm MSM specific device drivers
 #
 CONFIG_MSM_SSBI=y
@@ -3996,3 +3991,10 @@ CONFIG_DQL=y
 CONFIG_NLATTR=y
 # CONFIG_AVERAGE is not set
 # CONFIG_CORDIC is not set
+#
+# Qualcomm Atheros Prima WLAN module
+#
+CONFIG_PRIMA_WLAN=m
+CONFIG_PRIMA_WLAN_LFR=y
+CONFIG_PRIMA_WLAN_OKC=y
+CONFIG_PRIMA_WLAN_11AC_HIGH_TP=y
