@@ -18,7 +18,6 @@ find . -name '*.ko' -exec cp {} $MODULES_DIR/ \;
 cd $MODULES_DIR
 echo "Stripping modules for size"
 $TOOLCHAIN-strip --strip-unneeded *.ko
-zip -9 modules *
 cd $KERNEL_DIR
 else
 echo "Compilation failed! Fix the errors!"
