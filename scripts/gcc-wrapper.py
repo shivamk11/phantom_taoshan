@@ -43,6 +43,8 @@ allowed_warnings = set([
     "alignment.c:327",
     "mmu.c:602",
     "return_address.c:62",
+   "wlan_qct_tl.c:10619",
+   "csrApiRoam.c:7267",
  ])
 
 # Capture the name of the object file, can find it.
