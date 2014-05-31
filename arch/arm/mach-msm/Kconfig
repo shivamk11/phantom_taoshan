@@ -1631,6 +1631,27 @@ config MSM_CPU_FREQ_MIN
 
 endif # CPU_FREQ_MSM
 
+<<<<<<< HEAD
+=======
+config INTELLI_PLUG
+   bool "Enable intelli-plug cpu hotplug driver"
+   default n
+   help
+     Generic Intelli-plug cpu hotplug driver for ARM SOCs
+
+config CPU_OVERCLOCK
+        bool "Enable Overclock frequencies"
+        default n
+        help
+          Overclock configuration for enabling more frequencies
+		
+config PM8921_CHARGER_CONTROL
+	bool "Charger current control driver for PM8921 type hardware"
+	default n
+	help
+		Exposes sysfs controls for various charging currents
+
+>>>>>>> e61e630... Initial bringup: PM8921-Charger Control 1.0
 config MSM_AVS_HW
 	bool "Enable Adaptive Voltage Scaling (AVS)"
 	default n
