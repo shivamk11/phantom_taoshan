@@ -8,7 +8,7 @@ then
 rm $ZIMAGE
 rm $MODULES_DIR/*
 fi
-make ARCH=arm CROSS_COMPILE=$TOOLCHAIN- sa77-kk_defconfig
+make ARCH=arm CROSS_COMPILE=$TOOLCHAIN- sa77_defconfig
 make ARCH=arm CROSS_COMPILE=$TOOLCHAIN- -j8
 if [ -a $KERNEL_DIR/arch/arm/boot/zImage ];
 then
