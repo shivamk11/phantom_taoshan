@@ -373,7 +373,8 @@ KBUILD_CFLAGS   := -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
                    -Wno-maybe-uninitialized \
-                   -Wno-array-bounds
+                   -Wno-array-bounds \
+                   -w
           
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
